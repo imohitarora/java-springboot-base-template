@@ -1,4 +1,6 @@
-package com.neweltechnologies.portfolio.users;
+package com.neweltechnologies.portfolio.config.audit;
+
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,11 +12,16 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-public class User {
+public class Audit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String entityName;
+    private Long entityId;
+    private String action;
+    private LocalDateTime timestamp;
     private String username;
-    private String email;
+
+    // Getters and setters
 }
