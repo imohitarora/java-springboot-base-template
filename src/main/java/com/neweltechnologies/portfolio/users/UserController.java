@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.neweltechnologies.portfolio.base.BaseController;
-import com.neweltechnologies.portfolio.config.audit.AuditTrail;
 
 @RestController
 @RequestMapping("/users")
@@ -22,7 +21,6 @@ public class UserController extends BaseController<User, Long> {
     }
 
     @PostMapping("/create")
-    @AuditTrail(entityName = "User", action = "CREATE")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User createdUser = userService.createUser(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
