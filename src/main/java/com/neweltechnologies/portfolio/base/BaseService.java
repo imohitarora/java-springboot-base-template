@@ -1,5 +1,11 @@
 package com.neweltechnologies.portfolio.base;
 
+import java.beans.FeatureDescriptor;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -7,16 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.neweltechnologies.portfolio.config.audit.AuditTrail;
-
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-
-import java.beans.FeatureDescriptor;
-import java.io.Serializable;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 public abstract class BaseService<T, ID extends Serializable> {
 
