@@ -1,5 +1,7 @@
 package com.neweltechnologies.portfolio.users;
 
+import org.hibernate.envers.Audited;
+
 import com.neweltechnologies.portfolio.base.BaseEntity;
 
 import jakarta.persistence.Entity;
@@ -12,6 +14,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
+@Audited
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

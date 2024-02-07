@@ -1,5 +1,6 @@
 package com.neweltechnologies.portfolio.base;
 
+import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -19,6 +20,7 @@ import java.util.Date;
 @MappedSuperclass
 @Getter
 @Setter
+@Audited
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
 
@@ -39,5 +41,8 @@ public abstract class BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date lastModifiedDate;
+
+    @Column(nullable = false)
+    private Boolean active = false;
 
 }
