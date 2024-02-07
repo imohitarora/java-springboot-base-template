@@ -2,11 +2,19 @@ server:
   port: 8082
 
 spring:
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: default
   datasource:
     url: jdbc:mysql://localhost:3306/bael
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
+    properties:
+      hibernate:
+        ejb: 
+          interceptor: org.springframework.data.jpa.domain.support.AuditingEntityListener
     hibernate:
       ddl-auto: update
