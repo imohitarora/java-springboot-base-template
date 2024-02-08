@@ -1,9 +1,12 @@
-package com.neweltechnologies.portfolio.config.audit;
+package com.neweltechnologies.portfolio.config.aspect;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
+
+import com.neweltechnologies.portfolio.config.audit.AuditService;
+import com.neweltechnologies.portfolio.config.audit.AuditTrail;
 
 @Aspect
 @Component

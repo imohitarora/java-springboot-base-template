@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.neweltechnologies.portfolio.base.BaseController;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("users")
 public class UserController extends BaseController<Long, User, UserDTO> {
 
     private final UserService userService;
