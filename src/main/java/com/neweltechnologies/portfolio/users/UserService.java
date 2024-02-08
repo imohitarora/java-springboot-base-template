@@ -30,7 +30,7 @@ public class UserService extends BaseService<Long, User, UserDTO> {
         user.setId(dto.getId());
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
-        user.setProfile(new UserProfile(dto.getProfile().getId(), dto.getProfile().getFirstName(),
+        user.setProfile(new UserProfile(dto.getProfile().getFirstName(),
                 dto.getProfile().getLastName(), user));
         return user;
     }
