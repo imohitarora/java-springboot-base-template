@@ -1,6 +1,7 @@
 package com.neweltechnologies.portfolio.base;
 
-import org.hibernate.envers.Audited;
+import java.time.LocalDateTime;
+
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -10,39 +11,30 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Date;
 
 @MappedSuperclass
 @Getter
 @Setter
-@Audited
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
 
     @CreatedBy
-    @Column(nullable = true, updatable = true)
+    @Column(updatable = true)
     private String createdBy;
 
     @CreatedDate
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     @LastModifiedBy
-    @Column(nullable = true)
     private String lastModifiedBy;
 
     @LastModifiedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
-    private Date lastModifiedDate;
+    private LocalDateTime lastModifiedDate;
 
     @Column(nullable = false)
-    private Boolean active = false;
+    private boolean active = false;
 
 }
