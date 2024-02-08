@@ -21,15 +21,9 @@ public class UserService extends BaseService<User, UserDTO> {
 
     @Override
     protected UserDTO mapToDTO(User entity) {
-        UserDTO dto = new UserDTO();
-        dto.setId(entity.getId());
+        UserDTO dto = new UserDTO(entity);
         dto.setUsername(entity.getUsername());
         dto.setEmail(entity.getEmail());
-        dto.setCreatedBy(entity.getCreatedBy());
-        dto.setCreatedDate(entity.getCreatedDate());
-        dto.setLastModifiedBy(entity.getLastModifiedBy());
-        dto.setLastModifiedDate(entity.getLastModifiedDate());
-        dto.setActive(entity.isActive());
         return dto;
     }
 
@@ -38,10 +32,6 @@ public class UserService extends BaseService<User, UserDTO> {
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
-        user.setCreatedBy(dto.getCreatedBy());
-        user.setCreatedDate(dto.getCreatedDate());
-        user.setLastModifiedBy(dto.getLastModifiedBy());
-        user.setLastModifiedDate(dto.getLastModifiedDate());
         user.setActive(dto.isActive());
         return user;
     }

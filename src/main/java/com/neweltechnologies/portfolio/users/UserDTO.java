@@ -10,4 +10,11 @@ import lombok.Setter;
 public class UserDTO extends BaseDTO {
     private String username;
     private String email;
+
+    public UserDTO(User entity) {
+        super(entity);
+    }
+
+    public UserDTO() {
+    }
 }

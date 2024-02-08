@@ -16,4 +16,16 @@ public class BaseDTO {
     private boolean active;
 
     // Getters and setters
+
+    public BaseDTO() {
+    }
+
+    public BaseDTO(BaseEntity entity) {
+        this.id = entity.getId();
+        this.createdBy = entity.getCreatedBy();
+        this.createdDate = entity.getCreatedDate();
+        this.lastModifiedBy = entity.getLastModifiedBy();
+        this.lastModifiedDate = entity.getLastModifiedDate();
+        this.active = entity.isActive();
+    }
 }
