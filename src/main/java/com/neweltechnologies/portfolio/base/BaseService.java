@@ -1,75 +1,56 @@
 package com.neweltechnologies.portfolio.base;
 
-import java.beans.FeatureDescriptor;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+public abstract class BaseService<E extends BaseEntity, DTO extends BaseDTO> implements IBaseService<DTO> {
 
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+    protected abstract BaseRepository<E> getRepository();
 
-public abstract class BaseService<ID extends Serializable, E extends BaseEntity, D extends BaseDTO<ID>> {
+    protected abstract DTO mapToDTO(E entity);
 
-    @Autowired
-    private BaseRepository<E, ID> repository;
+    protected abstract E mapToEntity(DTO dto);
 
-    public List<D> findAll() {
-        List<E> entities = repository.findAll();
-        return entities.stream().map(this::mapToDTO).collect(Collectors.toList());
-    }
-
-    public Page<D> findAll(Pageable pageable) {
-        Page<E> page = repository.findAll(pageable);
-        return page.map(this::mapToDTO);
-    }
-
-    public Optional<D> findById(ID id) {
-        return repository.findById(id).map(this::mapToDTO);
-    }
-
-    public D save(D dto) {
+    @Override
+    public DTO create(DTO dto) {
         E entity = mapToEntity(dto);
-        return mapToDTO(repository.save(entity));
+        E savedEntity = getRepository().save(entity);
+        return mapToDTO(savedEntity);
     }
 
-    public void deleteById(ID id) {
-        repository.deleteById(id);
-    }
-
-    @Transactional
-    public D update(ID id, D dto) {
-        // Retrieve the existing entity from the database
-        Optional<E> optionalEntity = repository.findById(id);
+    @Override
+    public DTO update(Long id, DTO dto) {
+        Optional<E> optionalEntity = getRepository().findById(id);
         if (optionalEntity.isPresent()) {
-            E existingEntity = optionalEntity.get();
-            // Copy properties from the provided DTO to the existing entity
-            BeanUtils.copyProperties(dto, existingEntity, getNullPropertyNames(dto));
-            return mapToDTO(repository.save(existingEntity));
+            E entity = optionalEntity.get();
+            mapDtoToEntity(dto, entity);
+            E savedEntity = getRepository().save(entity);
+            return mapToDTO(savedEntity);
         } else {
-            throw new EntityNotFoundException("Entity with id " + id + " not found.");
+            throw new RuntimeException("Entity not found with id: " + id);
         }
     }
 
-    // Convert entity to DTO
-    protected abstract D mapToDTO(E entity);
+    @Override
+    public void delete(Long id) {
+        getRepository().deleteById(id);
+    }
 
-    // Convert DTO to entity
-    protected abstract E mapToEntity(D dto);
+    @Override
+    public Optional<DTO> getById(Long id) {
+        return getRepository().findById(id)
+                .map(this::mapToDTO);
+    }
 
-    private String[] getNullPropertyNames(Object source) {
-        final BeanWrapper src = new BeanWrapperImpl(source);
-        return Stream.of(src.getPropertyDescriptors())
-                .map(FeatureDescriptor::getName)
-                .filter(propertyName -> src.getPropertyValue(propertyName) == null)
-                .toArray(String[]::new);
+    @Override
+    public List<DTO> getAll() {
+        return getRepository().findAll().stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    protected void mapDtoToEntity(DTO dto, E entity) {
+        // Implement this method in subclass if needed
     }
 }

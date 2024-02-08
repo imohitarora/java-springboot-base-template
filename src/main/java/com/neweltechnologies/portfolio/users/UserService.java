@@ -1,38 +1,22 @@
 package com.neweltechnologies.portfolio.users;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.neweltechnologies.portfolio.base.BaseRepository;
 import com.neweltechnologies.portfolio.base.BaseService;
-import com.neweltechnologies.portfolio.config.audit.AuditTrail;
-import com.neweltechnologies.portfolio.userprofile.UserProfile;
-import com.neweltechnologies.portfolio.userprofile.UserProfileDTO;
 
 @Service
-public class UserService extends BaseService<Long, User, UserDTO> {
+public class UserService extends BaseService<User, UserDTO> {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @AuditTrail(entityName = "User", action = "CREATE")
-    public User createUser(User user) {
-        UserProfile profile = user.getProfile();
-        if (profile != null) {
-            profile.setUser(user);
-        }
-        User createdUser = userRepository.save(user);
-        return createdUser;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
-    protected User mapToEntity(UserDTO dto) {
-        User user = new User();
-        user.setId(dto.getId());
-        user.setUsername(dto.getUsername());
-        user.setEmail(dto.getEmail());
-        user.setProfile(new UserProfile(dto.getProfile().getFirstName(),
-                dto.getProfile().getLastName(), user));
-        return user;
+    protected BaseRepository<User> getRepository() {
+        return userRepository;
     }
 
     @Override
@@ -41,8 +25,31 @@ public class UserService extends BaseService<Long, User, UserDTO> {
         dto.setId(entity.getId());
         dto.setUsername(entity.getUsername());
         dto.setEmail(entity.getEmail());
-        dto.setProfile(UserProfileDTO.Mapper.toDTO(entity.getProfile()));
+        dto.setCreatedBy(entity.getCreatedBy());
+        dto.setCreatedDate(entity.getCreatedDate());
+        dto.setLastModifiedBy(entity.getLastModifiedBy());
+        dto.setLastModifiedDate(entity.getLastModifiedDate());
+        dto.setActive(entity.isActive());
         return dto;
     }
 
+    @Override
+    protected User mapToEntity(UserDTO dto) {
+        User user = new User();
+        user.setUsername(dto.getUsername());
+        user.setEmail(dto.getEmail());
+        user.setCreatedBy(dto.getCreatedBy());
+        user.setCreatedDate(dto.getCreatedDate());
+        user.setLastModifiedBy(dto.getLastModifiedBy());
+        user.setLastModifiedDate(dto.getLastModifiedDate());
+        user.setActive(dto.isActive());
+        return user;
+    }
+
+    @Override
+    protected void mapDtoToEntity(UserDTO dto, User entity) {
+        entity.setUsername(dto.getUsername());
+        entity.setEmail(dto.getEmail());
+        entity.setActive(dto.isActive());
+    }
 }
