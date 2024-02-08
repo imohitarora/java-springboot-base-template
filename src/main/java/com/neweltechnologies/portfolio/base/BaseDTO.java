@@ -2,17 +2,28 @@ package com.neweltechnologies.portfolio.base;
 
 import java.time.LocalDateTime;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class BaseDTO {
+    @Schema(hidden = true)
     private Long id;
+
+    @Schema(hidden = true)
     private String createdBy;
+
+    @Schema(hidden = true)
     private LocalDateTime createdDate;
+
+    @Schema(hidden = true)
     private String lastModifiedBy;
+
+    @Schema(hidden = true)
     private LocalDateTime lastModifiedDate;
+
     private boolean active;
 
     // Getters and setters
