@@ -1,70 +1,56 @@
 package com.neweltechnologies.portfolio.base;
 
-import java.beans.FeatureDescriptor;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+public abstract class BaseService<E extends BaseEntity, DTO extends BaseDTO> implements IBaseService<DTO> {
 
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+    protected abstract BaseRepository<E> getRepository();
 
-public abstract class BaseService<T, ID extends Serializable> {
+    protected abstract DTO mapToDTO(E entity);
 
-    @Autowired
-    protected BaseRepository<T, ID> repository;
+    protected abstract E mapToEntity(DTO dto);
 
-    public List<T> findAll() {
-        return repository.findAll();
+    @Override
+    public DTO create(DTO dto) {
+        E entity = mapToEntity(dto);
+        E savedEntity = getRepository().save(entity);
+        return mapToDTO(savedEntity);
     }
 
-    public Page<T> findAll(Pageable pageable) {
-        return repository.findAll(pageable);
-    }
-
-    public Optional<T> findById(ID id) {
-        return repository.findById(id);
-    }
-
-    public T save(T entity) {
-        return repository.save(entity);
-    }
-
-    public void delete(T entity) {
-        repository.delete(entity);
-    }
-
-    public void deleteById(ID id) {
-        repository.deleteById(id);
-    }
-
-    @Transactional
-    public T update(ID id, T entity) {
-        // Retrieve the existing entity from the database
-        Optional<T> optionalEntity = repository.findById(id);
+    @Override
+    public DTO update(Long id, DTO dto) {
+        Optional<E> optionalEntity = getRepository().findById(id);
         if (optionalEntity.isPresent()) {
-            T existingEntity = optionalEntity.get();
-            // Copy properties from the provided entity to the existing entity
-            BeanUtils.copyProperties(entity, existingEntity, getNullPropertyNames(entity));
-            return repository.save(existingEntity);
+            E entity = optionalEntity.get();
+            mapDtoToEntity(dto, entity);
+            E savedEntity = getRepository().save(entity);
+            return mapToDTO(savedEntity);
         } else {
-            throw new EntityNotFoundException("Entity with id " + id + " not found.");
+            throw new RuntimeException("Entity not found with id: " + id);
         }
     }
 
-    // Helper method to get null property names for BeanUtils.copyProperties
-    private String[] getNullPropertyNames(Object source) {
-        final BeanWrapper src = new BeanWrapperImpl(source);
-        return Stream.of(src.getPropertyDescriptors())
-                .map(FeatureDescriptor::getName)
-                .filter(propertyName -> src.getPropertyValue(propertyName) == null)
-                .toArray(String[]::new);
+    @Override
+    public void delete(Long id) {
+        getRepository().deleteById(id);
+    }
+
+    @Override
+    public Optional<DTO> getById(Long id) {
+        return getRepository().findById(id)
+                .map(this::mapToDTO);
+    }
+
+    @Override
+    public List<DTO> getAll() {
+        return getRepository().findAll().stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    protected void mapDtoToEntity(DTO dto, E entity) {
+        // Implement this method in subclass if needed
     }
 }

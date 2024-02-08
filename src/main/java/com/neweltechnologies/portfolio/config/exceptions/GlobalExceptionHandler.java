@@ -1,4 +1,4 @@
-package com.neweltechnologies.portfolio.config;
+package com.neweltechnologies.portfolio.config.exceptions;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import com.neweltechnologies.portfolio.config.exceptions.ResourceNotFoundException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {

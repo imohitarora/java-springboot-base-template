@@ -18,3 +18,7 @@ spring:
           interceptor: org.springframework.data.jpa.domain.support.AuditingEntityListener
     hibernate:
       ddl-auto: update
+
+springdoc:
+  api-docs:
+    path: /api-docs
