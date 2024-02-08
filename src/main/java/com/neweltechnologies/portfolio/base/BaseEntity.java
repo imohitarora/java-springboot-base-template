@@ -1,5 +1,6 @@
 package com.neweltechnologies.portfolio.base;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedBy;

@@ -1,13 +1,14 @@
-package com.neweltechnologies.portfolio.users;
+package com.neweltechnologies.portfolio.userprofile;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.neweltechnologies.portfolio.base.BaseEntity;
-import com.neweltechnologies.portfolio.userprofile.UserProfile;
+import com.neweltechnologies.portfolio.users.User;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,16 +22,18 @@ import lombok.ToString;
 @Getter
 @ToString
 @Entity
-public class User extends BaseEntity {
+public class UserProfile extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
+    private String firstName;
 
-    private String email;
+    private String lastName;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private UserProfile profile;
+    @OneToOne
+    @JoinColumn(name = "user")
+    @JsonBackReference
+    private User user;
 
 }

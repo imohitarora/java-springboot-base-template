@@ -11,7 +11,7 @@ import com.neweltechnologies.portfolio.base.BaseController;
 
 @RestController
 @RequestMapping("/users")
-public class UserController extends BaseController<User, Long> {
+public class UserController extends BaseController<Long, User, UserDTO> {
 
     private final UserService userService;
 

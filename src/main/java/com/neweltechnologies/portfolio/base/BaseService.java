@@ -4,6 +4,7 @@ import java.beans.FeatureDescriptor;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.BeanUtils;
@@ -16,29 +17,28 @@ import org.springframework.data.domain.Pageable;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
-public abstract class BaseService<T, ID extends Serializable> {
+public abstract class BaseService<ID extends Serializable, E extends BaseEntity, D extends BaseDTO<ID>> {
 
     @Autowired
-    protected BaseRepository<T, ID> repository;
+    private BaseRepository<E, ID> repository;
 
-    public List<T> findAll() {
-        return repository.findAll();
+    public List<D> findAll() {
+        List<E> entities = repository.findAll();
+        return entities.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
-    public Page<T> findAll(Pageable pageable) {
-        return repository.findAll(pageable);
+    public Page<D> findAll(Pageable pageable) {
+        Page<E> page = repository.findAll(pageable);
+        return page.map(this::mapToDTO);
     }
 
-    public Optional<T> findById(ID id) {
-        return repository.findById(id);
+    public Optional<D> findById(ID id) {
+        return repository.findById(id).map(this::mapToDTO);
     }
 
-    public T save(T entity) {
-        return repository.save(entity);
-    }
-
-    public void delete(T entity) {
-        repository.delete(entity);
+    public D save(D dto) {
+        E entity = mapToEntity(dto);
+        return mapToDTO(repository.save(entity));
     }
 
     public void deleteById(ID id) {
@@ -46,20 +46,25 @@ public abstract class BaseService<T, ID extends Serializable> {
     }
 
     @Transactional
-    public T update(ID id, T entity) {
+    public D update(ID id, D dto) {
         // Retrieve the existing entity from the database
-        Optional<T> optionalEntity = repository.findById(id);
+        Optional<E> optionalEntity = repository.findById(id);
         if (optionalEntity.isPresent()) {
-            T existingEntity = optionalEntity.get();
-            // Copy properties from the provided entity to the existing entity
-            BeanUtils.copyProperties(entity, existingEntity, getNullPropertyNames(entity));
-            return repository.save(existingEntity);
+            E existingEntity = optionalEntity.get();
+            // Copy properties from the provided DTO to the existing entity
+            BeanUtils.copyProperties(dto, existingEntity, getNullPropertyNames(dto));
+            return mapToDTO(repository.save(existingEntity));
         } else {
             throw new EntityNotFoundException("Entity with id " + id + " not found.");
         }
     }
 
-    // Helper method to get null property names for BeanUtils.copyProperties
+    // Convert entity to DTO
+    protected abstract D mapToDTO(E entity);
+
+    // Convert DTO to entity
+    protected abstract E mapToEntity(D dto);
+
     private String[] getNullPropertyNames(Object source) {
         final BeanWrapper src = new BeanWrapperImpl(source);
         return Stream.of(src.getPropertyDescriptors())

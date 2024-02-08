@@ -10,45 +10,45 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class BaseController<T, ID extends Serializable> {
+public abstract class BaseController<ID extends Serializable, E extends BaseEntity, D extends BaseDTO<ID>> {
 
-    protected final BaseService<T, ID> service;
+    protected final BaseService<ID, E, D> service;
 
-    public BaseController(BaseService<T, ID> service) {
+    public BaseController(BaseService<ID, E, D> service) {
         this.service = service;
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<T>> findAll() {
-        List<T> entities = service.findAll();
+    public ResponseEntity<List<D>> findAll() {
+        List<D> entities = service.findAll();
         return new ResponseEntity<>(entities, HttpStatus.OK);
     }
 
     @GetMapping("/page")
-    public ResponseEntity<Page<T>> findAll(Pageable pageable) {
-        Page<T> entities = service.findAll(pageable);
+    public ResponseEntity<Page<D>> findAll(Pageable pageable) {
+        Page<D> entities = service.findAll(pageable);
         return new ResponseEntity<>(entities, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<T> findById(@PathVariable("id") ID id) {
-        Optional<T> entity = service.findById(id);
+    public ResponseEntity<D> findById(@PathVariable("id") ID id) {
+        Optional<D> entity = service.findById(id);
         return entity.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/")
-    public ResponseEntity<T> save(@RequestBody T entity) {
-        T savedEntity = service.save(entity);
+    public ResponseEntity<D> save(@RequestBody D entity) {
+        D savedEntity = service.save(entity);
         return new ResponseEntity<>(savedEntity, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<T> update(@PathVariable("id") ID id, @RequestBody T entity) {
-        Optional<T> existingEntity = service.findById(id);
+    public ResponseEntity<D> update(@PathVariable("id") ID id, @RequestBody D entity) {
+        Optional<D> existingEntity = service.findById(id);
         if (existingEntity.isPresent()) {
             // Update the existing entity with the new data
-            T updatedEntity = service.update(id, entity);
+            D updatedEntity = service.update(id, entity);
             return new ResponseEntity<>(updatedEntity, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
