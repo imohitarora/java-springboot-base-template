@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.neweltechnologies.portfolio.base.BaseController;
 import com.neweltechnologies.portfolio.base.IBaseService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/v1/users")
+@Tag(name = "Users")
 public class UserController extends BaseController<UserDTO> {
 
     private final UserService userService;

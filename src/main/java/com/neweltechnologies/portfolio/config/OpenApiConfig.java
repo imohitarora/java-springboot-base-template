@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
                         email = "me@aboutmohit.com"
                 ),
                 description = "OpenApi documentation for Spring Security",
-                title = "OpenApi specification - Mohit Arora",
+                title = "OpenApi Specification - PFMS API by Mohit Arora",
                 version = "1.0",
                 termsOfService = "Terms of service"
         ),
