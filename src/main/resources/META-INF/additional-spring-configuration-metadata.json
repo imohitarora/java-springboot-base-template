@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "pfms.security.jwt.secret",
+    "type": "java.lang.String",
+    "description": "A description for 'pfms.security.jwt.secret'"
+  },
+  {
+    "name": "pfms.security.jwt.expiration",
+    "type": "java.lang.String",
+    "description": "A description for 'pfms.security.jwt.expiration'"
+  },
+  {
+    "name": "pfms.security.jwt.refresh-token-expiration",
+    "type": "java.lang.String",
+    "description": "A description for 'pfms.security.jwt.refresh-token-expiration'"
+  }
+]}
