@@ -21,12 +21,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleAllExceptions(Exception ex) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("message", "Something went wrong. Please try again later.");
+    // @ExceptionHandler(Exception.class)
+    // public ResponseEntity<Object> handleAllExceptions(Exception ex) {
+    //     Map<String, Object> body = new LinkedHashMap<>();
+    //     body.put("timestamp", LocalDateTime.now());
+    //     body.put("message", "Something went wrong. Please try again later.");
 
-        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    //     return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+    // }
 }
