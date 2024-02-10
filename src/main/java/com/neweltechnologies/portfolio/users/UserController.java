@@ -1,13 +1,21 @@
 package com.neweltechnologies.portfolio.users;
 
+import java.security.Principal;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.neweltechnologies.portfolio.base.BaseController;
 import com.neweltechnologies.portfolio.base.IBaseService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
+@Tag(name = "Users")
 public class UserController extends BaseController<UserDTO> {
 
     private final UserService userService;
@@ -19,5 +27,13 @@ public class UserController extends BaseController<UserDTO> {
     @Override
     protected IBaseService<UserDTO> getService() {
         return userService;
+    }
+
+    @PatchMapping
+    public ResponseEntity<?> changePassword(
+            @RequestBody ChangePasswordRequest request,
+            Principal connectedUser) {
+        userService.changePassword(request, connectedUser);
+        return ResponseEntity.ok().build();
     }
 }

@@ -2,23 +2,35 @@ server:
   port: 8082
 
 spring:
+  application:
+    name: PortFolioManagementSystem
   data:
     jpa:
       repositories:
         bootstrap-mode: default
   datasource:
-    url: jdbc:mysql://localhost:3306/bael
-    username: root
-    password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:postgresql://localhost:5432/newel_pfms
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
   jpa:
     properties:
       hibernate:
-        ejb: 
+        ejb:
           interceptor: org.springframework.data.jpa.domain.support.AuditingEntityListener
     hibernate:
       ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    database: postgresql
 
 springdoc:
   api-docs:
     path: /api-docs
+
+pfms:
+  security:
+    jwt:
+      secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 86400000 # 1 day
+      refresh-token-expiration: 604800000 # 7 days
