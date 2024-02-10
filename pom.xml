@@ -9,10 +9,10 @@
 		<version>3.2.2</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.neweltechnologies</groupId>
-	<artifactId>portfolio</artifactId>
+	<groupId>com.aboutmohit</groupId>
+	<artifactId>java-spring-base</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>portfolio</name>
+	<name>Java Spring Base</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>21</java.version>
